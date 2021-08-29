@@ -24,16 +24,16 @@ class _AddRoomState extends State<AddRoom> {
     return Stack(
       children: [
         Container(
-          color: MythemeData.white,
-        ),
-        Image(
-          image: AssetImage(
+          decoration: BoxDecoration(color: Colors.white),
+          child: Image.asset(
             'assets/SIGN IN – 1.png',
+            fit: BoxFit.fill,
+            width: double.infinity,
+            height: double.infinity,
           ),
-          fit: BoxFit.fitWidth,
-          width: double.infinity,
         ),
         Scaffold(
+          backgroundColor: Colors.transparent,
           appBar: AppBar(
             title: Text('Route Chat App'),
             centerTitle: true,
@@ -66,7 +66,7 @@ class _AddRoomState extends State<AddRoom> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  Image(image: AssetImage('assets/images/add_room_header.png')),
+                  Image(image: AssetImage('assets/roomHeader.png')),
                   Form(
                     key: _addroomFormKey,
                     child: Column(
@@ -108,27 +108,27 @@ class _AddRoomState extends State<AddRoom> {
                     ),
                   ),
                   DropdownButton(
-                      value: selectedCateogry,
-                      iconSize: 24,
-                      elevation: 16,
-                      items: cateogries.map((name) {
-                        return DropdownMenuItem(
+                    value: selectedCateogry,
+                    iconSize: 24,
+                    elevation: 16,
+                    items: cateogries.map((name) {
+                      return DropdownMenuItem(
                           value: name,
-                            child: Row(
-                              children: [
-                                Image(
-                                  image: AssetImage('assets/images/$name.png'),
-                                  width: 24,
-                                  height: 24,
-                                ),
-                                Text(name),
-                              ],
-                            ));
-                      }).toList(),
-                    onChanged: (newSelected){
-                        setState(() {
-                          selectedCateogry = newSelected as String ;
-                        });
+                          child: Row(
+                            children: [
+                              Image(
+                                image: AssetImage('assets/$name.png'),
+                                width: 24,
+                                height: 24,
+                              ),
+                              Text(" $name"),
+                            ],
+                          ));
+                    }).toList(),
+                    onChanged: (newSelected) {
+                      setState(() {
+                        selectedCateogry = newSelected as String;
+                      });
                     },
                   ),
                   ElevatedButton(
