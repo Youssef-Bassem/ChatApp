@@ -1,5 +1,14 @@
+import 'package:ChatApp/auth/registeration/RegisterationScreen.dart';
+import 'package:ChatApp/database/DataBaseHelper.dart';
+import 'package:ChatApp/home/HomeScreen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ChatApp/model/User.dart' as MyUser ;
+import 'package:provider/provider.dart';
+
+import '../../Appprovider.dart';
+
 
 class LoginScreen extends StatefulWidget {
   static const String ROUTE_NAME = 'login';
@@ -15,8 +24,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String password = '';
 
+  late Appprovider provider;
+
   @override
   Widget build(BuildContext context) {
+    provider = Provider.of<Appprovider>(context);
     return Stack(
       children: [
         Container(
@@ -29,6 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         Scaffold(
+          backgroundColor: Colors.transparent,
           appBar: AppBar(
             title: Center(child: Text('Login')),
             backgroundColor: Colors.transparent,
@@ -84,7 +97,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       Login();
                     },
-                    child: Text('Create Account'))
+                    child: Text('Login')),
+                TextButton(child: Text('Or Create My Account!'),
+                  onPressed: (){
+                    Navigator.pushReplacementNamed(context, RegisterationScreen.ROUTE_NAME);
+                  },
+                )
               ],
             ),
           ),
@@ -107,6 +125,17 @@ class _LoginScreenState extends State<LoginScreen> {
           email: email,
           password: password,
       );
+      if(userCredential.user == null){
+        showMessageError('invalid Credentials no user exist''with this email and password');
+      }
+      else{
+        final userRef = getUsersCollectionWithConverter().doc(userCredential.user!.uid)
+            .get()
+            .then((retrievedUser){
+              provider.updateUser(retrievedUser.data());
+              Navigator.pushReplacementNamed(context, HomeScreen.ROUTE_NAME);
+        });
+      }
     } on FirebaseAuthException catch (e) {
       showMessageError(e.message ?? "something went wrong please try again");
     } catch (e) {

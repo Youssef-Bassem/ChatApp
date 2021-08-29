@@ -1,6 +1,8 @@
 import 'package:ChatApp/Appprovider.dart';
+import 'package:ChatApp/auth/login/LoginScreen.dart';
+import 'package:ChatApp/database/DataBaseHelper.dart';
 import 'package:ChatApp/home/HomeScreen.dart';
-import 'package:ChatApp/model/User.dart' as MyUser ;
+import 'package:ChatApp/model/User.dart' as MyUser;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,9 +24,11 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
   String email = '';
 
   String password = '';
+  late Appprovider provider;
 
   @override
   Widget build(BuildContext context) {
+    provider = Provider.of<Appprovider>(context);
     return Stack(
       children: [
         Container(
@@ -103,12 +107,18 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
                     ],
                   ),
                 ),
-                isLoading?
-                    Center(child: CircularProgressIndicator()) : ElevatedButton(
+                isLoading
+                    ? Center(child: CircularProgressIndicator())
+                    : ElevatedButton(
                     onPressed: () {
                       createAccount();
                     },
-                    child: Text('Create Account'))
+                    child: Text('Create Account')),
+                TextButton(child: Text('Already have Account!'),
+                  onPressed: (){
+                    Navigator.pushReplacementNamed(context, LoginScreen.ROUTE_NAME);
+                  },
+                )
               ],
             ),
           ),
@@ -116,6 +126,7 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
       ],
     );
   }
+
   final db = FirebaseFirestore.instance;
   bool isLoading = false;
   void createAccount() {
@@ -133,16 +144,13 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
           .createUserWithEmailAndPassword(email: email, password: password);
       showMessageError('User registered Successful');
 
-     final userCollectionRef = db.collection(MyUser.User.CollectionName).withConverter<MyUser.User>(
-       fromFirestore: (snapshot, _) => MyUser.User.fromJson(snapshot.data()!),
-       toFirestore: (user, _) => user.toJson(),
-     );
-     final provider = Provider.of<Appprovider>(context); 
-     final user = MyUser.User(email: email, id:userCredential.user!.uid, userName: userName);
-     userCollectionRef.add(user).then((value) {
-      provider.updateUser(user);
-      Navigator.of(context).pushReplacementNamed(HomeScreen.ROUTE_NAME);
-     });
+      final userCollectionRef = getUsersCollectionWithConverter();
+      final user = MyUser.User(
+          email: email, id: userCredential.user!.uid, userName: userName);
+      userCollectionRef.doc(user.id).set(user).then((value) {
+        provider.updateUser(user);
+        Navigator.of(context).pushReplacementNamed(HomeScreen.ROUTE_NAME);
+      });
     } on FirebaseAuthException catch (e) {
       showMessageError(e.message ?? "something went wrong please try again");
     } catch (e) {
