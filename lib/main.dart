@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget{
             HomeScreen.ROUTE_NAME:(context)=>HomeScreen(),
             AddRoom.ROUTE_NAME:(context)=>AddRoom(),
           },
-          initialRoute: LoginScreen.ROUTE_NAME,
+          initialRoute: AddRoom.ROUTE_NAME,
         );
       },
     );
