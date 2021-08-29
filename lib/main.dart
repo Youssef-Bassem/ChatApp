@@ -1,3 +1,4 @@
+import 'package:ChatApp/home/HomeScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -16,10 +17,11 @@ class MyApp extends StatelessWidget{
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        RegisterationScreen.routeName : (context)=>RegisterationScreen(),
-        LoginScreen.routeName : (context)=>LoginScreen(),
+        RegisterationScreen.ROUTE_NAME : (context)=>RegisterationScreen(),
+        LoginScreen.ROUTE_NAME : (context)=>LoginScreen(),
+        HomeScreen.ROUTE_NAME:(context)=>HomeScreen(),
       },
-      initialRoute: RegisterationScreen.routeName,
+      initialRoute: RegisterationScreen.ROUTE_NAME,
     );
   }
 
