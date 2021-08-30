@@ -19,19 +19,14 @@ class MyApp extends StatelessWidget{
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => Appprovider(),
-      builder: (context,widget){
+      builder: (context,widget)
+      {
+        final provider  = Provider.of<Appprovider>(context);
+        final isLoggedInUser = provider.checkLoggedInUser();
+
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: LoginScreen(),
-          /*
-          routes: {
-            RegisterationScreen.ROUTE_NAME : (context)=>RegisterationScreen(),
-            //LoginScreen.ROUTE_NAME : (context)=>LoginScreen(),
-            //HomeScreen.ROUTE_NAME:(context)=>HomeScreen(),
-            //AddRoom.ROUTE_NAME:(context)=>AddRoom(),
-          },
-          initialRoute: HomeScreen.ROUTE_NAME,
-          */
+          home: (isLoggedInUser) ? HomeScreen() : LoginScreen(),
         );
       },
     );

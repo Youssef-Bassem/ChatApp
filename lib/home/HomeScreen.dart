@@ -1,8 +1,10 @@
 import 'package:ChatApp/addRoom/AddRoom.dart';
+import 'package:ChatApp/auth/login/LoginScreen.dart';
 import 'package:ChatApp/database/DataBaseHelper.dart';
 import 'package:ChatApp/home/RoomWidget.dart';
 import 'package:ChatApp/model/Room.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../Search.dart';
@@ -42,10 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         Scaffold(
           appBar: AppBar(
-            leading: IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {},
-            ),
             title: _isSearching ? _buildSearchField() : Text('Chat App',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 23)),
             actions: _buildActions(),
             elevation: 0,
@@ -62,6 +60,27 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             child: Icon(Icons.add),
           ),
+
+          drawer: Drawer(
+            child: SafeArea(
+              child: Container(
+                alignment: Alignment.center,
+                child: TextButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                            (Route<dynamic> route) => false);
+                  },
+                  child: Text('Sign Out',style: TextStyle(fontSize: 24,color: Colors.white),),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.blue)
+                  ),
+                ),
+              ),
+            ),
+          ),
+
           body: Container(
             margin: EdgeInsets.only(top: 64, bottom: 12, left: 12, right: 12),
             child: FutureBuilder<QuerySnapshot<Room>>(
@@ -75,16 +94,19 @@ class _HomeScreenState extends State<HomeScreen> {
                             .map((singleDoc) => singleDoc.data())
                             .toList() ??
                         [];
-                    return GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 4,
-                        mainAxisSpacing: 4,
+                    return Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 4,
+                          mainAxisSpacing: 4,
+                        ),
+                        itemBuilder: (buildContext, index) {
+                          return RoomWidget(roomslist[index]);
+                        },
+                        itemCount: roomslist.length,
                       ),
-                      itemBuilder: (buildContext, index) {
-                        return RoomWidget(roomslist[index]);
-                      },
-                      itemCount: roomslist.length,
                     );
                   }
                   return Center(
@@ -180,4 +202,5 @@ class _HomeScreenState extends State<HomeScreen> {
       updateSearchQuery("");
     });
   }
+
 }
