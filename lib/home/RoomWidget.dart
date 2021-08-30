@@ -23,9 +23,9 @@ class RoomWidget extends StatelessWidget {
       child: Center(
         child: Column(
           children: [
-            Expanded(child: Image(image: AssetImage('assets/${room.cateogry}.png'),
+            Image(image: AssetImage('assets/${room.cateogry}.png'),
             height: 120,
-            fit: BoxFit.fill,)),
+            fit: BoxFit.fill,),
             Text(room.name,style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w600,
