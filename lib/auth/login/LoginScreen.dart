@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:ChatApp/auth/registeration/RegisterationScreen.dart';
 import 'package:ChatApp/database/DataBaseHelper.dart';
 import 'package:ChatApp/home/HomeScreen.dart';
@@ -47,6 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: TextStyle(fontWeight: FontWeight.bold,fontSize: 23),
               )
             ),
+            centerTitle: true,
             backgroundColor: Colors.transparent,
             elevation: 0,
           ),
