@@ -1,5 +1,8 @@
 import 'package:ChatApp/Appprovider.dart';
+import 'package:ChatApp/database/DataBaseHelper.dart';
+import 'package:ChatApp/model/Room.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AddRoom extends StatefulWidget {
   static const String ROUTE_NAME = 'addRoom';
@@ -18,6 +21,8 @@ class _AddRoomState extends State<AddRoom> {
   List<String> cateogries = ['sports', 'movies', 'music'];
 
   String selectedCateogry = 'sports';
+
+  bool isLoading =false;
 
   @override
   Widget build(BuildContext context) {
@@ -132,9 +137,14 @@ class _AddRoomState extends State<AddRoom> {
                     },
                   ),
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        if( _addroomFormKey.currentState!.validate() == true ){
+                          addroom();
+                        }
+                      },
                       style: ButtonStyle(),
-                      child: Text('Create'))
+                      child: isLoading ? Center(child: CircularProgressIndicator(),)
+                      :Text('Create'))
                 ],
               ),
             ),
@@ -142,5 +152,22 @@ class _AddRoomState extends State<AddRoom> {
         ),
       ],
     );
+  }
+  void addroom(){
+    setState(() {
+      isLoading=true;
+    });
+    final docRef = getRoomsCollectionWithConverter()
+        .doc();
+    Room room = Room(name: roomName, id: docRef.id
+        , description: description, cateogry: selectedCateogry);
+    docRef.set(room).then((value) {
+      setState(() {
+        isLoading=false;
+      });
+      Fluttertoast.showToast(msg: 'Room Added Successfully',
+      toastLength: Toast.LENGTH_LONG);
+      Navigator.pop(context);
+    });
   }
 }
