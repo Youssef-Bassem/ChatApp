@@ -4,11 +4,10 @@ import 'package:ChatApp/home/HomeScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ChatApp/model/User.dart' as MyUser ;
+import 'package:ChatApp/model/User.dart' as MyUser;
 import 'package:provider/provider.dart';
 
 import '../../Appprovider.dart';
-
 
 class LoginScreen extends StatefulWidget {
   static const String ROUTE_NAME = 'login';
@@ -92,15 +91,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                 ),
-                isLoading?
-                Center(child: CircularProgressIndicator()) : ElevatedButton(
-                    onPressed: () {
-                      Login();
-                    },
-                    child: Text('Login')),
-                TextButton(child: Text('Or Create My Account!'),
-                  onPressed: (){
-                    Navigator.pushReplacementNamed(context, RegisterationScreen.ROUTE_NAME);
+                isLoading
+                    ? Center(child: CircularProgressIndicator())
+                    : ElevatedButton(
+                        onPressed: () {
+                          Login();
+                        },
+                        child: Text('Login')
+                ),
+                TextButton(
+                  child: Text('Or Create My Account!'),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RegisterationScreen()),
+                    );
                   },
                 )
               ],
@@ -110,30 +115,37 @@ class _LoginScreenState extends State<LoginScreen> {
       ],
     );
   }
-  bool isLoading = false ;
+
+  bool isLoading = false;
   void Login() {
     if (_loginFormKey.currentState?.validate() == true) {
       signIn();
     }
   }
-  void signIn()async{
+
+  void signIn() async {
     setState(() {
-      isLoading=true;
+      isLoading = true;
     });
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email,
-          password: password,
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
       );
-      if(userCredential.user == null){
-        showMessageError('invalid Credentials no user exist''with this email and password');
-      }
-      else{
-        final userRef = getUsersCollectionWithConverter().doc(userCredential.user!.uid)
+      if (userCredential.user == null) {
+        showMessageError(
+            'invalid Credentials no user exist' 'with this email and password');
+      } else {
+        final userRef = getUsersCollectionWithConverter()
+            .doc(userCredential.user!.uid)
             .get()
-            .then((retrievedUser){
-              provider.updateUser(retrievedUser.data());
-              Navigator.pushReplacementNamed(context, HomeScreen.ROUTE_NAME);
+            .then((retrievedUser) {
+          provider.updateUser(retrievedUser.data());
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
         });
       }
     } on FirebaseAuthException catch (e) {

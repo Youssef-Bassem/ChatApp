@@ -43,9 +43,15 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            title: Center(child: Text('Create Account')),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back,),
+              onPressed: ()
+              {Navigator.pop(context);},
+            ),
+            title: Text('Create Account'),
             backgroundColor: Colors.transparent,
             elevation: 0,
+            centerTitle: true,
           ),
           body: Container(
             padding: EdgeInsets.all(12),
@@ -116,7 +122,7 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
                     child: Text('Create Account')),
                 TextButton(child: Text('Already have Account!'),
                   onPressed: (){
-                    Navigator.pushReplacementNamed(context, LoginScreen.ROUTE_NAME);
+                    Navigator.pop(context);
                   },
                 )
               ],
@@ -149,7 +155,10 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
           email: email, id: userCredential.user!.uid, userName: userName);
       userCollectionRef.doc(user.id).set(user).then((value) {
         provider.updateUser(user);
-        Navigator.of(context).pushReplacementNamed(HomeScreen.ROUTE_NAME);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
       });
     } on FirebaseAuthException catch (e) {
       showMessageError(e.message ?? "something went wrong please try again");
