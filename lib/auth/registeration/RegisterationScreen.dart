@@ -44,16 +44,20 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             leading: IconButton(
-              icon: Icon(Icons.arrow_back,),
-              onPressed: ()
-              {Navigator.pop(context);},
+              icon: Icon(
+                Icons.arrow_back,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
-            title: Text('Create Account'),
+            title: Text('Create Account',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 23),),
             backgroundColor: Colors.transparent,
             elevation: 0,
             centerTitle: true,
           ),
           body: Container(
+            height: double.infinity,
             padding: EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -78,6 +82,9 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
                           return null;
                         },
                       ),
+                      SizedBox(
+                        height: 10,
+                      ),
                       TextFormField(
                         onChanged: (textValue) {
                           email = textValue;
@@ -92,6 +99,9 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
                           }
                           return null;
                         },
+                      ),
+                      SizedBox(
+                        height: 10,
                       ),
                       TextFormField(
                         onChanged: (textValue) {
@@ -110,20 +120,53 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
                           return null;
                         },
                       ),
+                      SizedBox(
+                        height: 30,
+                      ),
                     ],
                   ),
                 ),
-                isLoading
-                    ? Center(child: CircularProgressIndicator())
-                    : ElevatedButton(
-                    onPressed: () {
-                      createAccount();
-                    },
-                    child: Text('Create Account')),
-                TextButton(child: Text('Already have Account!'),
-                  onPressed: (){
-                    Navigator.pop(context);
-                  },
+                Container(
+                  alignment: Alignment.bottomCenter,
+                  child: Column(
+                    children: [
+                      isLoading
+                          ? Center(child: CircularProgressIndicator())
+                          : Container(
+                        height: 50,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(Colors.white),
+                          ),
+                          onPressed: () {
+                            createAccount();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 20,right: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Create Account',
+                                  style: TextStyle(
+                                      fontSize: 15, fontWeight: FontWeight.bold,color: Colors.grey),
+                                ),
+                                Icon(Icons.arrow_forward,color: Colors.grey,)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      /*
+                      TextButton(
+                        child: Text('Already have Account!'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      )
+                       */
+                    ],
+                  ),
                 )
               ],
             ),
