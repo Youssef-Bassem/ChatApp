@@ -22,13 +22,16 @@ class MyApp extends StatelessWidget{
       builder: (context,widget){
         return MaterialApp(
           debugShowCheckedModeBanner: false,
+          home: LoginScreen(),
+          /*
           routes: {
             RegisterationScreen.ROUTE_NAME : (context)=>RegisterationScreen(),
-            LoginScreen.ROUTE_NAME : (context)=>LoginScreen(),
-            HomeScreen.ROUTE_NAME:(context)=>HomeScreen(),
-            AddRoom.ROUTE_NAME:(context)=>AddRoom(),
+            //LoginScreen.ROUTE_NAME : (context)=>LoginScreen(),
+            //HomeScreen.ROUTE_NAME:(context)=>HomeScreen(),
+            //AddRoom.ROUTE_NAME:(context)=>AddRoom(),
           },
           initialRoute: HomeScreen.ROUTE_NAME,
+          */
         );
       },
     );
