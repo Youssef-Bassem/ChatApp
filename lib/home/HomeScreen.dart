@@ -5,13 +5,28 @@ import 'package:ChatApp/model/Room.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
+import '../Search.dart';
+
+class HomeScreen extends StatefulWidget {
   static const String ROUTE_NAME = 'home';
   late CollectionReference<Room> roomsCollectionRef;
+
 
   HomeScreen() {
     roomsCollectionRef = getRoomsCollectionWithConverter();
   }
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  TextEditingController _searchQueryController = TextEditingController();
+
+  bool _isSearching = false;
+
+  late String searchQuery = "";
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -27,7 +42,12 @@ class HomeScreen extends StatelessWidget {
         ),
         Scaffold(
           appBar: AppBar(
-            title: Text('Route Chat App'),
+            leading: IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {},
+            ),
+            title: _isSearching ? _buildSearchField() : Text('Chat App',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 23)),
+            actions: _buildActions(),
             elevation: 0,
             centerTitle: true,
             backgroundColor: Colors.transparent,
@@ -45,7 +65,7 @@ class HomeScreen extends StatelessWidget {
           body: Container(
             margin: EdgeInsets.only(top: 64, bottom: 12, left: 12, right: 12),
             child: FutureBuilder<QuerySnapshot<Room>>(
-                future: roomsCollectionRef.get(),
+                future: widget.roomsCollectionRef.get(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot<Room>> snapshot) {
                   if (snapshot.hasError) {
@@ -75,5 +95,89 @@ class HomeScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  //******************************* Search Bar *******************************
+
+  Widget _buildSearchField() {
+    return TextField(
+      controller: _searchQueryController,
+      cursorColor: Colors.white,
+      autofocus: true,
+      decoration: InputDecoration(
+        //hintText: AppLocalizations.of(context)!.search,
+        border: InputBorder.none,
+        hintText: 'Search Room Name',
+        hintStyle: TextStyle(color: Colors.black),
+      ),
+      style: TextStyle(color: Colors.black, fontSize: 16.0),
+      onChanged: (query) => updateSearchQuery(query),
+    );
+  }
+
+  List<Widget> _buildActions() {
+    if (_isSearching) {
+      return <Widget>[
+        IconButton(
+          icon: const Icon(Icons.done),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Search()),
+            );
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () {
+            if (_searchQueryController == null ||
+                _searchQueryController.text.isEmpty) {
+              Navigator.pop(context);
+
+              return;
+            }
+            _clearSearchQuery();
+          },
+        ),
+      ];
+    }
+
+    return <Widget>[
+      IconButton(
+        iconSize: 32,
+        icon: const Icon(Icons.search),
+        onPressed: _startSearch,
+      ),
+    ];
+  }
+
+  void _startSearch() {
+    ModalRoute.of(context)!
+        .addLocalHistoryEntry(LocalHistoryEntry(onRemove: _stopSearching));
+
+    setState(() {
+      _isSearching = true;
+    });
+  }
+
+  void updateSearchQuery(String newQuery) {
+    setState(() {
+      searchQuery = newQuery;
+    });
+  }
+
+  void _stopSearching() {
+    _clearSearchQuery();
+
+    setState(() {
+      _isSearching = false;
+    });
+  }
+
+  void _clearSearchQuery() {
+    setState(() {
+      _searchQueryController.clear();
+      updateSearchQuery("");
+    });
   }
 }

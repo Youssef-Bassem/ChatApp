@@ -22,7 +22,7 @@ class _AddRoomState extends State<AddRoom> {
 
   String selectedCateogry = 'sports';
 
-  bool isLoading =false;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,8 @@ class _AddRoomState extends State<AddRoom> {
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            title: Text('Route Chat App'),
+            title: Text('Chat App',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23)),
             centerTitle: true,
             elevation: 0,
             backgroundColor: Colors.transparent,
@@ -58,7 +59,7 @@ class _AddRoomState extends State<AddRoom> {
                       offset: Offset(4, 8),
                     )
                   ]),
-              margin: EdgeInsets.symmetric(vertical: 32, horizontal: 12),
+              margin: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -66,7 +67,7 @@ class _AddRoomState extends State<AddRoom> {
                     'Create New Room',
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 24,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.center,
@@ -112,7 +113,12 @@ class _AddRoomState extends State<AddRoom> {
                       ],
                     ),
                   ),
-                  DropdownButton(
+                  SizedBox(height: 25,),
+                  DropdownButtonFormField(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Select Room Category',
+                    ),
                     value: selectedCateogry,
                     iconSize: 24,
                     elevation: 16,
@@ -136,15 +142,26 @@ class _AddRoomState extends State<AddRoom> {
                       });
                     },
                   ),
+                  SizedBox(height: 25,),
                   ElevatedButton(
                       onPressed: () {
-                        if( _addroomFormKey.currentState!.validate() == true ){
+                        if (_addroomFormKey.currentState!.validate() == true) {
                           addroom();
                         }
                       },
-                      style: ButtonStyle(),
-                      child: isLoading ? Center(child: CircularProgressIndicator(),)
-                      :Text('Create'))
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  //side: BorderSide(color: Colors.red)
+                              )
+                          )
+                      ),
+                      child: isLoading
+                          ? Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : Text('Create',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),))
                 ],
               ),
             ),
@@ -153,20 +170,23 @@ class _AddRoomState extends State<AddRoom> {
       ],
     );
   }
-  void addroom(){
+
+  void addroom() {
     setState(() {
-      isLoading=true;
+      isLoading = true;
     });
-    final docRef = getRoomsCollectionWithConverter()
-        .doc();
-    Room room = Room(name: roomName, id: docRef.id
-        , description: description, cateogry: selectedCateogry);
+    final docRef = getRoomsCollectionWithConverter().doc();
+    Room room = Room(
+        name: roomName,
+        id: docRef.id,
+        description: description,
+        cateogry: selectedCateogry);
     docRef.set(room).then((value) {
       setState(() {
-        isLoading=false;
+        isLoading = false;
       });
-      Fluttertoast.showToast(msg: 'Room Added Successfully',
-      toastLength: Toast.LENGTH_LONG);
+      Fluttertoast.showToast(
+          msg: 'Room Added Successfully', toastLength: Toast.LENGTH_LONG);
       Navigator.pop(context);
     });
   }

@@ -42,7 +42,11 @@ class _LoginScreenState extends State<LoginScreen> {
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            title: Center(child: Text('Login')),
+            title: Center(child:
+              Text('Login',
+                style: TextStyle(fontWeight: FontWeight.bold,fontSize: 23),
+              )
+            ),
             backgroundColor: Colors.transparent,
             elevation: 0,
           ),
@@ -52,6 +56,16 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Text(
+                  'Welcome Back !',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
                 Form(
                   key: _loginFormKey,
                   child: Column(
@@ -71,6 +85,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           return null;
                         },
                       ),
+                      SizedBox(
+                        height: 10,
+                      ),
                       TextFormField(
                         onChanged: (textValue) {
                           password = textValue;
@@ -88,23 +105,53 @@ class _LoginScreenState extends State<LoginScreen> {
                           return null;
                         },
                       ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton(
+                          onPressed: () {},
+                          child: Text('Forgot Password ?'),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
                     ],
                   ),
                 ),
                 isLoading
                     ? Center(child: CircularProgressIndicator())
-                    : ElevatedButton(
-                        onPressed: () {
-                          Login();
-                        },
-                        child: Text('Login')
-                ),
+                    : Container(
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Login();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 20,right: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Login',
+                                  style: TextStyle(
+                                      fontSize: 15, fontWeight: FontWeight.bold),
+                                ),
+                                Icon(Icons.arrow_forward)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                 TextButton(
                   child: Text('Or Create My Account!'),
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => RegisterationScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => RegisterationScreen()),
                     );
                   },
                 )
