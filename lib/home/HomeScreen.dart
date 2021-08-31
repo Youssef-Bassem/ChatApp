@@ -1,6 +1,9 @@
+import 'dart:ffi';
+
 import 'package:ChatApp/addRoom/AddRoom.dart';
 import 'package:ChatApp/auth/login/LoginScreen.dart';
 import 'package:ChatApp/database/DataBaseHelper.dart';
+import 'package:ChatApp/home/MyRoom.dart';
 import 'package:ChatApp/home/RoomWidget.dart';
 import 'package:ChatApp/model/Room.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../Search.dart';
+import 'Browse.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String ROUTE_NAME = 'home';
@@ -91,20 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             .map((singleDoc) => singleDoc.data())
                             .toList() ??
                         [];
-                    return Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 4,
-                          mainAxisSpacing: 4,
-                        ),
-                        itemBuilder: (buildContext, index) {
-                          return RoomWidget(roomslist[index]);
-                        },
-                        itemCount: roomslist.length,
-                      ),
-                    );
+                    return Browse(roomslist);
                   }
                   return Center(
                     child: CircularProgressIndicator(),

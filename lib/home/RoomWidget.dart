@@ -1,3 +1,4 @@
+import 'package:ChatApp/joinRoom/JoinRoom.dart';
 import 'package:ChatApp/model/Room.dart';
 import 'package:ChatApp/room/RoomScreen.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +11,14 @@ class RoomWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context)
-            .pushNamed(RoomScreen.routeName, arguments: RoomScreenArgs(room));
+        if(room.type == true){
+          Navigator.of(context)
+              .pushNamed(RoomScreen.routeName, arguments: RoomScreenArgs(room));
+        }
+        else {
+          Navigator.of(context)
+              .pushNamed(JoinRoom.ROUTE_NAME, arguments: JoinRoomArgs(room));
+        }
       },
       child: Container(
         padding: EdgeInsets.all(8),

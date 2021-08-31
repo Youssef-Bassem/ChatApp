@@ -1,5 +1,6 @@
 import 'package:ChatApp/Appprovider.dart';
 import 'package:ChatApp/home/HomeScreen.dart';
+import 'package:ChatApp/home/MyRoom.dart';
 import 'package:ChatApp/room/RoomScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'addRoom/AddRoom.dart';
 import 'auth/login/LoginScreen.dart';
 import 'auth/registeration/RegisterationScreen.dart';
+import 'joinRoom/JoinRoom.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +25,6 @@ class MyApp extends StatelessWidget{
       {
         final provider  = Provider.of<Appprovider>(context);
         final isLoggedInUser = provider.checkLoggedInUser();
-
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           routes: {
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget{
             HomeScreen.ROUTE_NAME:(buildContext)=>HomeScreen(),
             AddRoom.ROUTE_NAME:(buildContext)=>AddRoom(),
             RoomScreen.routeName:(buildContext)=>RoomScreen(),
+            JoinRoom.ROUTE_NAME:(buildContext)=>JoinRoom(),
           },
           initialRoute: isLoggedInUser ? HomeScreen.ROUTE_NAME : LoginScreen.ROUTE_NAME,
         );

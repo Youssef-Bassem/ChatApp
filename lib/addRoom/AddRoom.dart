@@ -23,6 +23,8 @@ class _AddRoomState extends State<AddRoom> {
 
   String selectedCategory = 'sports';
 
+  bool type = false;
+
   bool isLoading = false;
 
   @override
@@ -198,7 +200,8 @@ class _AddRoomState extends State<AddRoom> {
         name: roomName,
         id: docRef.id,
         description: description,
-        cateogry: selectedCategory);
+        cateogry: selectedCategory,
+        type: type);
     docRef.set(room).then((value) {
       setState(() {
         isLoading = false;
