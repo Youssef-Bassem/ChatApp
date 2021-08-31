@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'MessageWidget.dart';
+import 'package:intl/intl.dart';
 
 class RoomScreen extends StatefulWidget {
   static const routeName = 'Room';
@@ -27,6 +28,8 @@ class _RoomScreenState extends State<RoomScreen> {
 
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('EEE d MMM').format(now);
     provider = Provider.of<Appprovider>(context);
     room = (ModalRoute.of(context)?.settings.arguments as RoomScreenArgs).room;
     final Stream<QuerySnapshot<Message>> messagesRef =
@@ -69,7 +72,7 @@ class _RoomScreenState extends State<RoomScreen> {
               margin: EdgeInsets.symmetric(vertical: 32,horizontal: 12),
               child: Column(
                 children: [
-                  Text('Date Time',style: TextStyle(fontSize: 16),),
+                  Text('$formattedDate',style: TextStyle(fontSize: 16),),
                   Expanded(
                       child: StreamBuilder<QuerySnapshot<Message>>(
                         stream: messagesRef,
