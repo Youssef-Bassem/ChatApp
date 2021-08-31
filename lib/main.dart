@@ -1,5 +1,6 @@
 import 'package:ChatApp/Appprovider.dart';
 import 'package:ChatApp/home/HomeScreen.dart';
+import 'package:ChatApp/room/RoomScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +27,14 @@ class MyApp extends StatelessWidget{
 
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: (isLoggedInUser) ? HomeScreen() : LoginScreen(),
+          routes: {
+            LoginScreen.ROUTE_NAME:(buildContext)=>LoginScreen(),
+            RegisterationScreen.ROUTE_NAME:(buildContext)=>RegisterationScreen(),
+            HomeScreen.ROUTE_NAME:(buildContext)=>HomeScreen(),
+            AddRoom.ROUTE_NAME:(buildContext)=>AddRoom(),
+            RoomScreen.routeName:(buildContext)=>RoomScreen(),
+          },
+          initialRoute: isLoggedInUser ? HomeScreen.ROUTE_NAME : LoginScreen.ROUTE_NAME,
         );
       },
     );

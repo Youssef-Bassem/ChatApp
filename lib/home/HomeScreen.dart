@@ -53,10 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.transparent,
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddRoom()),
-              );
+              Navigator.pushNamed(context,AddRoom.ROUTE_NAME);
             },
             child: Icon(Icons.add),
           ),

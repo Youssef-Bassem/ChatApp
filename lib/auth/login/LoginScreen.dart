@@ -192,10 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
             .get()
             .then((retrievedUser) {
           provider.updateUser(retrievedUser.data());
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
-          );
+          Navigator.pushReplacementNamed(context, HomeScreen.ROUTE_NAME);
         });
       }
     } on FirebaseAuthException catch (e) {
