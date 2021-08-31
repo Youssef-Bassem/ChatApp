@@ -198,10 +198,7 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
           email: email, id: userCredential.user!.uid, userName: userName);
       userCollectionRef.doc(user.id).set(user).then((value) {
         provider.updateUser(user);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
+        Navigator.pushReplacementNamed(context, HomeScreen.ROUTE_NAME);
       });
     } on FirebaseAuthException catch (e) {
       showMessageError(e.message ?? "something went wrong please try again");
