@@ -90,7 +90,7 @@ class _AddRoomState extends State<AddRoom> {
                             decoration: InputDecoration(
                                 labelText: 'Enter Room Name',
                                 floatingLabelBehavior:
-                                    FloatingLabelBehavior.auto),
+                                FloatingLabelBehavior.auto),
                             // The validator receives the text that the user has entered.
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -166,18 +166,18 @@ class _AddRoomState extends State<AddRoom> {
                       style: ElevatedButton.styleFrom(
                         fixedSize: Size(200,50),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
                       ),
                       child: isLoading
                           ? Center(
-                              child: CircularProgressIndicator(),
-                            )
+                        child: CircularProgressIndicator(),
+                      )
                           : Text(
-                              'Create',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
-                            ),
+                        'Create',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
                     ),
                   ),
                 ],

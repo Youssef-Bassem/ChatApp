@@ -19,6 +19,8 @@ class RegisterationScreen extends StatefulWidget {
 class _RegisterationScreenState extends State<RegisterationScreen> {
   final _registerFormKey = GlobalKey<FormState>();
 
+  bool passwordVisibility = true;
+
   String userName = '';
 
   String email = '';
@@ -109,6 +111,16 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
                           password = textValue;
                         },
                         decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              icon: passwordVisibility
+                                  ? Icon(
+                                Icons.remove_red_eye_outlined,
+                              )
+                                  : Icon(Icons.remove_red_eye),
+                              onPressed: () {
+                                _togglePasswordVisibility();
+                              },
+                            ),
                             labelText: 'Password',
                             floatingLabelBehavior: FloatingLabelBehavior.auto),
                         // The validator receives the text that the user has entered.
@@ -208,6 +220,12 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
     }
     setState(() {
       isLoading = false;
+    });
+  }
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      passwordVisibility = !passwordVisibility;
     });
   }
 
