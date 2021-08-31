@@ -1,5 +1,6 @@
 import 'package:ChatApp/model/Room.dart';
 import 'package:ChatApp/room/RoomScreen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class JoinRoom extends StatefulWidget {
@@ -66,7 +67,12 @@ class _JoinRoomState extends State<JoinRoom> {
                     child: Text('\n${room.description}',),
                   ),
                   ElevatedButton(onPressed: () {
-                    room.type = true;
+                    Room r;
+
+                    var collection = FirebaseFirestore.instance.collection('rooms');
+                    collection
+                        .doc(room.id)
+                        .update({'type': true});
                     Navigator.of(context)
                         .pushNamed(RoomScreen.routeName, arguments: RoomScreenArgs(room));
                   },
