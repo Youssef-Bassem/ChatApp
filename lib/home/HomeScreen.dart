@@ -142,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Search()),
+              MaterialPageRoute(builder: (context) => Search(searchQuery,widget.roomsCollectionRef)),
             );
           },
         ),
