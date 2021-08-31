@@ -9,9 +9,9 @@ class RoomWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
-        Navigator.of(context).pushNamed(RoomScreen.routeName,
-            arguments: RoomScreenArgs(room));
+      onTap: () {
+        Navigator.of(context)
+            .pushNamed(RoomScreen.routeName, arguments: RoomScreenArgs(room));
       },
       child: Container(
         padding: EdgeInsets.all(8),
@@ -25,18 +25,27 @@ class RoomWidget extends StatelessWidget {
                 offset: Offset(4, 8), // Shadow position
               ),
             ]),
-        child:
-        Center(
+        child: Center(
           child: Column(
             children: [
-              Image(image: AssetImage('assets/${room.cateogry}.png'),
-                height: 120,
-                fit: BoxFit.fitHeight,
+              Expanded(
+                flex: 5,
+                child: Image(
+                  image: AssetImage('assets/${room.cateogry}.png'),
+                  fit: BoxFit.fitHeight,
+                ),
               ),
-              Text(room.name,style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 24
-              ),)
+              SizedBox(
+                height: 5,
+              ),
+              Expanded(
+                child: Text(
+                  room.name,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

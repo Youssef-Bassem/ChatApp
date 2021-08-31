@@ -13,15 +13,15 @@ class AddRoom extends StatefulWidget {
 }
 
 class _AddRoomState extends State<AddRoom> {
-  final _addroomFormKey = GlobalKey<FormState>();
+  final _addRoomFormKey = GlobalKey<FormState>();
 
   String roomName = '';
 
   String description = '';
 
-  List<String> cateogries = ['sports', 'movies', 'music'];
+  List<String> categories = ['sports', 'movies', 'music'];
 
-  String selectedCateogry = 'sports';
+  String selectedCategory = 'sports';
 
   bool isLoading = false;
 
@@ -39,6 +39,7 @@ class _AddRoomState extends State<AddRoom> {
           ),
         ),
         Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             title: Text('Chat App',
@@ -73,96 +74,112 @@ class _AddRoomState extends State<AddRoom> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  Image(image: AssetImage('assets/roomHeader.png')),
-                  Form(
-                    key: _addroomFormKey,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          onChanged: (text) {
-                            roomName = text;
-                          },
-                          keyboardType: TextInputType.name,
-                          decoration: InputDecoration(
-                              labelText: 'Room Name',
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.auto),
-                          // The validator receives the text that the user has entered.
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter Room Name';
-                            }
-                            return null;
-                          },
-                        ),
-                        TextFormField(
-                          onChanged: (textValue) {
-                            description = textValue;
-                          },
-                          decoration: InputDecoration(
-                              labelText: 'description',
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.auto),
-                          // The validator receives the text that the user has entered.
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter room Description';
-                            }
-                            return null;
-                          },
-                        ),
-                      ],
+                  Expanded(
+                      flex: 1,
+                      child: Image(image: AssetImage('assets/roomHeader.png'))),
+                  Expanded(
+                    child: Form(
+                      key: _addRoomFormKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            onChanged: (text) {
+                              roomName = text;
+                            },
+                            keyboardType: TextInputType.name,
+                            decoration: InputDecoration(
+                                labelText: 'Enter Room Name',
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.auto),
+                            // The validator receives the text that the user has entered.
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter Room Name';
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  SizedBox(height: 25,),
-                  DropdownButtonFormField(
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Select Room Category',
-                    ),
-                    value: selectedCateogry,
-                    iconSize: 24,
-                    elevation: 16,
-                    items: cateogries.map((name) {
-                      return DropdownMenuItem(
+                  SizedBox(
+                    height: 25,
+                  ),
+                  Expanded(
+                    child: DropdownButtonFormField(
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Select Room Category',
+                      ),
+                      value: selectedCategory,
+                      iconSize: 24,
+                      elevation: 16,
+                      items: categories.map((name) {
+                        return DropdownMenuItem(
                           value: name,
                           child: Row(
                             children: [
                               Image(
-                                image: AssetImage('assets/$name.png'),
+                                image: name == 'Select Room Category'? AssetImage('assets/$name.png') : AssetImage('assets/$name.png'),
                                 width: 24,
                                 height: 24,
                               ),
                               Text(" $name"),
                             ],
-                          ));
-                    }).toList(),
-                    onChanged: (newSelected) {
-                      setState(() {
-                        selectedCateogry = newSelected as String;
-                      });
-                    },
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (newSelected) {
+                        setState(() {
+                          selectedCategory = newSelected as String;
+                        });
+                      },
+                    ),
                   ),
-                  SizedBox(height: 25,),
-                  ElevatedButton(
+                  Expanded(
+                    flex: 2,
+                    child: TextFormField(
+                      onChanged: (textValue) {
+                        description = textValue;
+                      },
+                      decoration: InputDecoration(
+                          labelText: 'Enter Room Description',
+                          floatingLabelBehavior: FloatingLabelBehavior.auto),
+                      // The validator receives the text that the user has entered.
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter room Description';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    child: ElevatedButton(
                       onPressed: () {
-                        if (_addroomFormKey.currentState!.validate() == true) {
-                          addroom();
+                        if (_addRoomFormKey.currentState!.validate() == true) {
+                          addRoom();
                         }
                       },
-                      style: ButtonStyle(
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  //side: BorderSide(color: Colors.red)
-                              )
-                          )
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: Size(200,50),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
                       ),
                       child: isLoading
                           ? Center(
                               child: CircularProgressIndicator(),
                             )
-                          : Text('Create',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),))
+                          : Text(
+                              'Create',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
+                            ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -172,7 +189,7 @@ class _AddRoomState extends State<AddRoom> {
     );
   }
 
-  void addroom() {
+  void addRoom() {
     setState(() {
       isLoading = true;
     });
@@ -181,7 +198,7 @@ class _AddRoomState extends State<AddRoom> {
         name: roomName,
         id: docRef.id,
         description: description,
-        cateogry: selectedCateogry);
+        cateogry: selectedCategory);
     docRef.set(room).then((value) {
       setState(() {
         isLoading = false;
