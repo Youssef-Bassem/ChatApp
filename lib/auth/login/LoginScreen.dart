@@ -21,6 +21,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _loginFormKey = GlobalKey<FormState>();
 
+  bool passwordVisibility = true;
+
   String email = '';
 
   String password = '';
@@ -45,11 +47,11 @@ class _LoginScreenState extends State<LoginScreen> {
           resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            title: Center(child:
-            Text('Login',
-              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 23),
-            )
-            ),
+            title: Center(
+                child: Text(
+              'Login',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
+            )),
             centerTitle: true,
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -60,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height:15),
+                SizedBox(height: 15),
                 Text(
                   'Welcome Back !',
                   style: TextStyle(
@@ -93,22 +95,36 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(
                         height: 10,
                       ),
-                      TextFormField(
-                        onChanged: (textValue) {
-                          password = textValue;
-                        },
-                        decoration: InputDecoration(
+                      Container(
+                        child: TextFormField(
+                          obscureText: passwordVisibility,
+                          onChanged: (textValue) {
+                            password = textValue;
+                          },
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              icon: passwordVisibility
+                                  ? Icon(
+                                      Icons.remove_red_eye_outlined,
+                                    )
+                                  : Icon(Icons.remove_red_eye),
+                              onPressed: () {
+                                _togglePasswordVisibility();
+                              },
+                            ),
                             labelText: 'Password',
-                            floatingLabelBehavior: FloatingLabelBehavior.auto),
-                        // The validator receives the text that the user has entered.
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter password';
-                          } else if (value.length < 6) {
-                            return 'password should be at least 6 characters';
-                          }
-                          return null;
-                        },
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                          ),
+                          // The validator receives the text that the user has entered.
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter password';
+                            } else if (value.length < 6) {
+                              return 'password should be at least 6 characters';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
                       SizedBox(
                         height: 10,
@@ -129,27 +145,28 @@ class _LoginScreenState extends State<LoginScreen> {
                 isLoading
                     ? Center(child: CircularProgressIndicator())
                     : Container(
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Login();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20,right: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Login',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            login();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 20, right: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Login',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Icon(Icons.arrow_forward)
+                              ],
+                            ),
                           ),
-                          Icon(Icons.arrow_forward)
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                ),
                 TextButton(
                   child: Text('Or Create My Account!'),
                   onPressed: () {
@@ -169,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   bool isLoading = false;
-  void Login() {
+  void login() {
     if (_loginFormKey.currentState?.validate() == true) {
       signIn();
     }
@@ -181,7 +198,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     try {
       UserCredential userCredential =
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -223,5 +240,11 @@ class _LoginScreenState extends State<LoginScreen> {
             ],
           );
         });
+  }
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      passwordVisibility = !passwordVisibility;
+    });
   }
 }
