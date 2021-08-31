@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-//import 'MessageWidget.dart';
+import 'MessageWidget.dart';
 
 class RoomScreen extends StatefulWidget {
   static const routeName = 'Room';
@@ -30,9 +30,9 @@ class _RoomScreenState extends State<RoomScreen> {
     provider = Provider.of<Appprovider>(context);
     room = (ModalRoute.of(context)?.settings.arguments as RoomScreenArgs).room;
     final Stream<QuerySnapshot<Message>> messagesRef =
-        getMessagesCollectionWithConverter(room)
-            .orderBy('dateTime')
-            .snapshots();
+    getMessagesCollectionWithConverter(room)
+        .orderBy('dateTime')
+        .snapshots();
 
     return Stack(
         children:
@@ -71,7 +71,25 @@ class _RoomScreenState extends State<RoomScreen> {
                 children: [
                   Text('Date Time',style: TextStyle(fontSize: 16),),
                   Expanded(
-                      child: Container()
+                      child: StreamBuilder<QuerySnapshot<Message>>(
+                        stream: messagesRef,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot<Message>> snapshot) {
+                          if (snapshot.hasError) {
+                            return Text(snapshot.error.toString() ?? "");
+                          } else if (snapshot.hasData) {
+                            return ListView.builder(
+                                itemBuilder: (buildContext, index) {
+                                  return MessageWidget(
+                                      snapshot.data?.docs[index].data());
+                                },
+                                itemCount: snapshot.data?.size ?? 0);
+                          }
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
+                      )
                   ),
                   Row(
                     children: [
@@ -91,7 +109,9 @@ class _RoomScreenState extends State<RoomScreen> {
                       ),
                       SizedBox(width: 8,),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          insertMessage(messageFieldText);
+                        },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                           child: Row(
@@ -112,11 +132,35 @@ class _RoomScreenState extends State<RoomScreen> {
                 ],
               ),
             ),
-        )
-      ]
+          )
+        ]
     );
   }
 
+  void insertMessage(String messageText) {
+    if (messageText.trim().isEmpty) return;
+    CollectionReference<Message> messages =
+    getMessagesCollectionWithConverter(room);
+    DocumentReference<Message> doc = messages.doc();
+    Message message = Message(
+        id: doc.id,
+        messageContent: messageText,
+        senderName: provider.currentUser?.userName ?? "",
+        senderId: provider.currentUser?.id ?? "",
+        dateTime: DateTime.now());
+    doc.set(message).then((addedMessage) {
+      print('in then');
+      setState(() {
+        print('set  state');
+        messageFieldText = '';
+        _editingController.text = '';
+      });
+    }).onError((error, stackTrace) {
+      print('on error');
+      Fluttertoast.showToast(
+          msg: error.toString(), toastLength: Toast.LENGTH_LONG);
+    });
+  }
 }
 
 class RoomScreenArgs {

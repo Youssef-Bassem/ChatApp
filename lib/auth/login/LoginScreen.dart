@@ -42,12 +42,13 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             title: Center(child:
-              Text('Login',
-                style: TextStyle(fontWeight: FontWeight.bold,fontSize: 23),
-              )
+            Text('Login',
+              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 23),
+            )
             ),
             centerTitle: true,
             backgroundColor: Colors.transparent,
@@ -59,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                SizedBox(height:15),
                 Text(
                   'Welcome Back !',
                   style: TextStyle(
@@ -127,27 +129,27 @@ class _LoginScreenState extends State<LoginScreen> {
                 isLoading
                     ? Center(child: CircularProgressIndicator())
                     : Container(
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Login();
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 20,right: 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Login',
-                                  style: TextStyle(
-                                      fontSize: 15, fontWeight: FontWeight.bold),
-                                ),
-                                Icon(Icons.arrow_forward)
-                              ],
-                            ),
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Login();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20,right: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Login',
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
                           ),
-                        ),
+                          Icon(Icons.arrow_forward)
+                        ],
                       ),
+                    ),
+                  ),
+                ),
                 TextButton(
                   child: Text('Or Create My Account!'),
                   onPressed: () {
@@ -179,7 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     try {
       UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );

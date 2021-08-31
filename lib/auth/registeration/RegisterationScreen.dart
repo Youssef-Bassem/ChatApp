@@ -41,6 +41,7 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
           ),
         ),
         Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             leading: IconButton(
