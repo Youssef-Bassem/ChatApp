@@ -28,10 +28,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController _searchQueryController = TextEditingController();
-
   bool _isSearching = false;
-
   late String searchQuery = "";
+
+  bool isMyRoom = true;
 
   @override
   Widget build(BuildContext context) {
@@ -75,32 +75,82 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   child: Text('Sign Out',style: TextStyle(fontSize: 24,color: Colors.white),),
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.blue)
+                      backgroundColor: MaterialStateProperty.all(Colors.blue)
                   ),
                 ),
               ),
             ),
           ),
 
-          body: Container(
-            margin: EdgeInsets.only(top: 64, bottom: 12, left: 12, right: 12),
-            child: FutureBuilder<QuerySnapshot<Room>>(
-                future: widget.roomsCollectionRef.get(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot<Room>> snapshot) {
-                  if (snapshot.hasError) {
-                    return Text('Something went wrong');
-                  } else if (snapshot.connectionState == ConnectionState.done) {
-                    final List<Room> roomslist = snapshot.data!.docs
-                            .map((singleDoc) => singleDoc.data())
-                            .toList() ??
-                        [];
-                    return Browse(roomslist);
-                  }
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }),
+          body: Column(
+            children: [
+              SizedBox(height: 10,),
+              Row(
+                children: [
+                  Expanded(
+                    child: MaterialButton(
+                      onPressed: () {
+                        setState(() {
+                          isMyRoom = true;
+                        });
+                      },
+                      child: Text('My Rooms',
+                        style: TextStyle(color: Colors.white,fontSize: 18),
+                      ),
+                      shape: Border(
+                          bottom: isMyRoom ?
+                          BorderSide(color: Colors.white, width: 3)
+                              :
+                          BorderSide(color: Colors.transparent, width: 3)
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: MaterialButton(
+                      onPressed: () {
+                        setState(() {
+                          isMyRoom = false;
+                        });
+                      },
+                      child: Text('Browse',
+                        style: TextStyle(color: Colors.white,fontSize: 18),
+                      ),
+                      shape: Border(
+                          bottom: isMyRoom ?
+                          BorderSide(color: Colors.transparent, width: 3)
+                              :
+                          BorderSide(color: Colors.white, width: 3)
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(top: 64, bottom: 12, left: 12, right: 12),
+                  child: FutureBuilder<QuerySnapshot<Room>>(
+                      future: widget.roomsCollectionRef.get(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot<Room>> snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('Something went wrong');
+                        } else if (snapshot.connectionState == ConnectionState.done) {
+                          final List<Room> roomslist = snapshot.data!.docs
+                              .map((singleDoc) => singleDoc.data())
+                              .toList() ??
+                              [];
+                          if(isMyRoom)
+                            return MyRoom(roomslist);
+                          else
+                            return Browse(roomslist);
+                        }
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }),
+                ),
+              ),
+            ],
           ),
         ),
       ],
