@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 
 class RoomWidget extends StatelessWidget {
   Room room;
-  RoomWidget(this.room);
+  late String userId;
+  RoomWidget(this.room,this.userId);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class RoomWidget extends StatelessWidget {
         }
         else {
           Navigator.of(context)
-              .pushNamed(JoinRoom.ROUTE_NAME, arguments: JoinRoomArgs(room));
+              .pushNamed(JoinRoom.ROUTE_NAME, arguments: JoinRoomArgs(room,this.userId));
         }
       },
       child: Container(

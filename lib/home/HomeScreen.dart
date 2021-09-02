@@ -17,7 +17,6 @@ class HomeScreen extends StatefulWidget {
   static const String ROUTE_NAME = 'home';
   late CollectionReference<Room> roomsCollectionRef;
 
-
   HomeScreen() {
     roomsCollectionRef = getRoomsCollectionWithConverter();
   }
@@ -32,9 +31,13 @@ class _HomeScreenState extends State<HomeScreen> {
   late String searchQuery = "";
 
   bool isMyRoom = true;
+  final firebaseUser = FirebaseAuth.instance.currentUser;
+  late String userId;
 
   @override
   Widget build(BuildContext context) {
+    userId = firebaseUser!.uid;
+
     return Stack(
       children: [
         Container(
@@ -135,14 +138,56 @@ class _HomeScreenState extends State<HomeScreen> {
                         if (snapshot.hasError) {
                           return Text('Something went wrong');
                         } else if (snapshot.connectionState == ConnectionState.done) {
-                          final List<Room> roomslist = snapshot.data!.docs
+
+                          final List<Room> myRoomsList = snapshot.data!.docs
                               .map((singleDoc) => singleDoc.data())
                               .toList() ??
                               [];
+                          for(int i=0 ; i<myRoomsList.length ; i++ )
+                          {
+                            int counter = 0;
+                            for(int j=0 ; j<myRoomsList[i].usersJoined.length ; j++ )
+                            {
+                              if( myRoomsList[i].usersJoined[j] == userId){
+                                counter++;
+                                break;
+                              }
+                            }
+                            if(counter == 0){
+                              myRoomsList.removeAt(i);
+                              i--;
+                            }
+                          }
+
+                          final List<Room> browseRoomsList = snapshot.data!.docs
+                              .map((singleDoc) => singleDoc.data())
+                              .toList() ??
+                              [];
+                          for(int i=0 ; i<browseRoomsList.length ; i++ )
+                          {
+                            for(int j=0 ; j<browseRoomsList[i].usersJoined.length ; j++ )
+                            {
+                              if( browseRoomsList[i].usersJoined[j] == userId){
+                                browseRoomsList.removeAt(i);
+                                i--;
+                                break;
+                              }
+                            }
+                          }
+
                           if(isMyRoom)
-                            return MyRoom(roomslist);
+                          {
+                            if(myRoomsList.isEmpty)
+                            {
+                              return Center(
+                                child: Text('No Joined Rooms Found',style: TextStyle(fontSize: 20),)
+                              );
+                            }
+                            else
+                              return MyRoom(myRoomsList);
+                          }
                           else
-                            return Browse(roomslist);
+                            return Browse(browseRoomsList);
                         }
                         return Center(
                           child: CircularProgressIndicator(),

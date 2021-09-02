@@ -1,19 +1,26 @@
 import 'package:ChatApp/model/Room.dart';
 import 'package:ChatApp/room/RoomScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class JoinRoom extends StatefulWidget {
   static const String ROUTE_NAME = 'joinRoom';
+
   @override
   _JoinRoomState createState() => _JoinRoomState();
 }
 
 class _JoinRoomState extends State<JoinRoom> {
   late Room room;
+  final firebaseUser = FirebaseAuth.instance.currentUser;
+  late String userId;
+
   @override
   Widget build(BuildContext context) {
     room = (ModalRoute.of(context)?.settings.arguments as JoinRoomArgs).room;
+    userId = firebaseUser!.uid;
+    //userId = (ModalRoute.of(context)?.settings.arguments as JoinRoomArgs).userId;
     return Stack(
       children: [
         Container(
@@ -66,16 +73,29 @@ class _JoinRoomState extends State<JoinRoom> {
                   Center(
                     child: Text('\n${room.description}',),
                   ),
-                  ElevatedButton(onPressed: () {
-                    Room r;
+                  ElevatedButton(
+                    onPressed: ()
+                    {
+                        print('heeeeeeeeeey userId = $userId');
+                        setState(() {
 
-                    var collection = FirebaseFirestore.instance.collection('rooms');
-                    collection
-                        .doc(room.id)
-                        .update({'type': true});
-                    Navigator.of(context)
-                        .pushNamed(RoomScreen.routeName, arguments: RoomScreenArgs(room));
-                  },
+                          room.usersJoined.add(userId); // Add In List
+
+                          var collection = FirebaseFirestore.instance.collection('rooms');
+                          collection
+                              .doc(room.id)
+                              .update({'type': true});
+                        });
+
+                      /*
+                      var collection = FirebaseFirestore.instance.collection('rooms');
+                      collection
+                          .doc(room.id)
+                          .update({'type': true});
+                      */
+                      Navigator.of(context)
+                          .pushNamed(RoomScreen.routeName, arguments: RoomScreenArgs(room));
+                    },
                     child: Text('Join', style: TextStyle(fontSize: 18),),
                   ),
                 ],
@@ -90,5 +110,6 @@ class _JoinRoomState extends State<JoinRoom> {
 
 class JoinRoomArgs {
   Room room;
-  JoinRoomArgs(this.room);
+  late String userId;
+  JoinRoomArgs(this.room,this.userId);
 }
