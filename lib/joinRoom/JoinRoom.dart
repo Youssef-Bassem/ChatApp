@@ -1,3 +1,4 @@
+import 'package:ChatApp/database/DataBaseHelper.dart';
 import 'package:ChatApp/model/Room.dart';
 import 'package:ChatApp/room/RoomScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +7,12 @@ import 'package:flutter/material.dart';
 
 class JoinRoom extends StatefulWidget {
   static const String ROUTE_NAME = 'joinRoom';
+  late CollectionReference<Room> roomsCollectionRef;
+
+  JoinRoom()
+  {
+    roomsCollectionRef = getRoomsCollectionWithConverter();
+  }
 
   @override
   _JoinRoomState createState() => _JoinRoomState();
@@ -74,25 +81,16 @@ class _JoinRoomState extends State<JoinRoom> {
                     child: Text('\n${room.description}',),
                   ),
                   ElevatedButton(
-                    onPressed: ()
+                    onPressed: () async
                     {
-                        print('heeeeeeeeeey userId = $userId');
-                        setState(() {
-
                           room.usersJoined.add(userId); // Add In List
+                          await widget.roomsCollectionRef.doc(room.id).update({'usersJoined' : room.usersJoined});
 
                           var collection = FirebaseFirestore.instance.collection('rooms');
                           collection
                               .doc(room.id)
                               .update({'type': true});
-                        });
 
-                      /*
-                      var collection = FirebaseFirestore.instance.collection('rooms');
-                      collection
-                          .doc(room.id)
-                          .update({'type': true});
-                      */
                       Navigator.of(context)
                           .pushNamed(RoomScreen.routeName, arguments: RoomScreenArgs(room));
                     },

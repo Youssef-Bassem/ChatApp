@@ -1,8 +1,11 @@
 import 'package:ChatApp/Appprovider.dart';
 import 'package:ChatApp/database/DataBaseHelper.dart';
+import 'package:ChatApp/home/HomeScreen.dart';
+import 'package:ChatApp/home/MyRoom.dart';
 import 'package:ChatApp/model/Message.dart';
 import 'package:ChatApp/model/Room.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +14,12 @@ import 'package:intl/intl.dart';
 
 class RoomScreen extends StatefulWidget {
   static const routeName = 'Room';
+  late CollectionReference<Room> roomsCollectionRef;
+
+  RoomScreen()
+  {
+    roomsCollectionRef = getRoomsCollectionWithConverter();
+  }
 
   @override
   _RoomScreenState createState() => _RoomScreenState();
@@ -21,7 +30,8 @@ class _RoomScreenState extends State<RoomScreen> {
   late Appprovider provider;
   String messageFieldText = '';
   TextEditingController _editingController = TextEditingController();
-  List<String> Choices = ['Leave Room'];
+  final firebaseUser = FirebaseAuth.instance.currentUser;
+  late String userId;
 
   @override
   void initState() {
@@ -30,6 +40,8 @@ class _RoomScreenState extends State<RoomScreen> {
 
   @override
   Widget build(BuildContext context) {
+    userId = firebaseUser!.uid;
+
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('EEE d MMM').format(now);
     provider = Provider.of<Appprovider>(context);
@@ -67,9 +79,13 @@ class _RoomScreenState extends State<RoomScreen> {
                         height: 20,
                       )
                     ],
-                    onCanceled: ()
+                    onCanceled: () async
                     {
-                      print('Canceeeeeeel'); // Leave Room
+                      room.usersJoined.remove(userId); // Add In List
+                      await widget.roomsCollectionRef.doc(room.id).update({'usersJoined' : room.usersJoined});
+
+                      Navigator.of(context)
+                          .pushNamed(HomeScreen.ROUTE_NAME, arguments: HomeScreen() );
                     },
                   ),
                 ),

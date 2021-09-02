@@ -54,6 +54,7 @@ class RoomWidget extends StatelessWidget {
                   ),
                 ),
               ),
+              Text('${room.usersJoined.length} Members'),
             ],
           ),
         ),
