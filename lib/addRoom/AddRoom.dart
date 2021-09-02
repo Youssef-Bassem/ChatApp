@@ -16,16 +16,13 @@ class _AddRoomState extends State<AddRoom> {
   final _addRoomFormKey = GlobalKey<FormState>();
 
   String roomName = '';
-
   String description = '';
-
   List<String> categories = ['sports', 'movies', 'music'];
-
   String selectedCategory = 'sports';
-
   bool type = false;
-
+  late List usersJoined;
   bool isLoading = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -201,7 +198,9 @@ class _AddRoomState extends State<AddRoom> {
         id: docRef.id,
         description: description,
         cateogry: selectedCategory,
-        type: type);
+        type: type,
+        usersJoined: usersJoined,
+    );
     docRef.set(room).then((value) {
       setState(() {
         isLoading = false;

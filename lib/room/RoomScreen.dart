@@ -21,6 +21,8 @@ class _RoomScreenState extends State<RoomScreen> {
   late Appprovider provider;
   String messageFieldText = '';
   TextEditingController _editingController = TextEditingController();
+  List<String> Choices = ['Leave Room'];
+
   @override
   void initState() {
     super.initState();
@@ -54,6 +56,25 @@ class _RoomScreenState extends State<RoomScreen> {
               elevation: 0,
               centerTitle: true,
               backgroundColor: Colors.transparent,
+              actions: <Widget> [
+
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: PopupMenuButton(
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                          child: Text('Leave Room'),
+                        height: 20,
+                      )
+                    ],
+                    onCanceled: ()
+                    {
+                      print('Canceeeeeeel'); // Leave Room
+                    },
+                  ),
+                ),
+
+    ],
             ),
             backgroundColor: Colors.transparent,
             body: Container(
