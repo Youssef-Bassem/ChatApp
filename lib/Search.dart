@@ -85,7 +85,8 @@ class _SearchState extends State<Search> {
                         itemBuilder: (buildContext, index) {
                           print('$index');
                           if ( roomslist[index].name.toUpperCase().contains(widget.searchQuery.toUpperCase() ))
-                            return RoomWidget(roomslist[index],"");
+                            //return RoomWidget(roomslist[index],"");
+                            return Container(color: Colors.black,);
                           else
                             return Container(color: Colors.black,);
                         },

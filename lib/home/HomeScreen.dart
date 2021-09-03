@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'package:ChatApp/model/User.dart' as MyUser;
 
 import 'package:ChatApp/addRoom/AddRoom.dart';
 import 'package:ChatApp/auth/login/LoginScreen.dart';
@@ -9,8 +10,6 @@ import 'package:ChatApp/model/Room.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ChatApp/model/User.dart' as MyUser;
-
 
 import '../Search.dart';
 import 'Browse.dart';
@@ -26,7 +25,8 @@ class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
-late List<Room> myRoomsList;
+
+late List<Room> myList;
 MyUser.User? currentUser ;
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -143,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           return Text('Something went wrong');
                         } else if (snapshot.connectionState == ConnectionState.done) {
 
-                          myRoomsList = snapshot.data!.docs
+                          List<Room> myRoomsList = snapshot.data!.docs
                               .map((singleDoc) => singleDoc.data())
                               .toList() ??
                               [];
@@ -178,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               }
                             }
                           }
-
+                          myList = browseRoomsList + myRoomsList;
                           if(isMyRoom)
                           {
                             if(myRoomsList.isEmpty)
@@ -292,16 +292,35 @@ class _HomeScreenState extends State<HomeScreen> {
 
 }
 
-bool checkRoomsExistence(String id){
-  for(int i = 0 ; i < myRoomsList.length ; i++){
-    if(myRoomsList[i].id == id){
-      int size = myRoomsList[i].usersJoined.length;
-      for(int j = 0 ; j < size ; j++){
-        if(myRoomsList[i].usersJoined[j] == currentUser!.id){
-          return true;
-        }
-      }
+bool checkRoomsExistence(String roomId, String userId){
+  int temp = 0;
+  for(int i = 0 ; i < myList.length ; i++){
+    if(myList[i].id == roomId){
+      temp = i;
+    }
+  }
+  for(int i = 0 ; i < myList[temp].usersJoined.length ; i++){
+    if(myList[temp].usersJoined[i] == userId){
+      return true;
     }
   }
   return false;
 }
+
+
+/*
+bool checkRoomsExistence(String id){
+  for(int i = 0 ; i < myList.length ; i++){
+    if(myList[i].id == id){
+      int size = myList[i].usersJoined.length;
+      for(int j = 0 ; j < size ; j++){
+        if(myList[i].usersJoined[j] == currentUser!.id){
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  return false;
+}
+ */
