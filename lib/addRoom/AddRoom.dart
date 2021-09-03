@@ -20,7 +20,7 @@ class _AddRoomState extends State<AddRoom> {
   List<String> categories = ['sports', 'movies', 'music'];
   String selectedCategory = 'sports';
   bool type = false;
-  late List usersJoined;
+  late List usersJoined = ['one'];
   bool isLoading = false;
 
 
