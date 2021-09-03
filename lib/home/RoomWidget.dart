@@ -3,6 +3,8 @@ import 'package:ChatApp/model/Room.dart';
 import 'package:ChatApp/room/RoomScreen.dart';
 import 'package:flutter/material.dart';
 
+import 'HomeScreen.dart';
+
 class RoomWidget extends StatelessWidget {
   Room room;
   late String userId;
@@ -12,7 +14,7 @@ class RoomWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if(room.type == true){
+        if(checkRoomsExistence(room.id) == true){
           Navigator.of(context)
               .pushNamed(RoomScreen.routeName, arguments: RoomScreenArgs(room));
         }

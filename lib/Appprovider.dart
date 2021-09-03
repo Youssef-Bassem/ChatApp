@@ -1,8 +1,10 @@
 import 'package:ChatApp/model/User.dart' as MyUser;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'database/DataBaseHelper.dart';
+import 'model/Room.dart';
 
 class MythemeData{
   static const primaryColor = Color.fromARGB(255,53,152,219);

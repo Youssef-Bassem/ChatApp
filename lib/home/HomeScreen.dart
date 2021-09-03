@@ -9,6 +9,8 @@ import 'package:ChatApp/model/Room.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ChatApp/model/User.dart' as MyUser;
+
 
 import '../Search.dart';
 import 'Browse.dart';
@@ -24,6 +26,8 @@ class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
+late List<Room> myRoomsList;
+MyUser.User? currentUser ;
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController _searchQueryController = TextEditingController();
@@ -139,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           return Text('Something went wrong');
                         } else if (snapshot.connectionState == ConnectionState.done) {
 
-                          final List<Room> myRoomsList = snapshot.data!.docs
+                          myRoomsList = snapshot.data!.docs
                               .map((singleDoc) => singleDoc.data())
                               .toList() ??
                               [];
@@ -286,4 +290,18 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+}
+
+bool checkRoomsExistence(String id){
+  for(int i = 0 ; i < myRoomsList.length ; i++){
+    if(myRoomsList[i].id == id){
+      int size = myRoomsList[i].usersJoined.length;
+      for(int j = 0 ; j < size ; j++){
+        if(myRoomsList[i].usersJoined[j] == currentUser!.id){
+          return true;
+        }
+      }
+    }
+  }
+  return false;
 }

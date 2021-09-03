@@ -2,6 +2,7 @@ import 'package:ChatApp/Appprovider.dart';
 import 'package:ChatApp/auth/login/LoginScreen.dart';
 import 'package:ChatApp/database/DataBaseHelper.dart';
 import 'package:ChatApp/home/HomeScreen.dart';
+import 'package:ChatApp/model/Room.dart';
 import 'package:ChatApp/model/User.dart' as MyUser;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,6 +27,9 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
   String email = '';
 
   String password = '';
+
+  List<Room> rooms = [];
+
   late Appprovider provider;
 
   @override
@@ -208,7 +212,7 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
 
       final userCollectionRef = getUsersCollectionWithConverter();
       final user = MyUser.User(
-          email: email, id: userCredential.user!.uid, userName: userName);
+          email: email, id: userCredential.user!.uid, userName: userName );
       userCollectionRef.doc(user.id).set(user).then((value) {
         provider.updateUser(user);
         Navigator.pushReplacementNamed(context, HomeScreen.ROUTE_NAME);
