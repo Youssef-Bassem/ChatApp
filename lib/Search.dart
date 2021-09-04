@@ -18,6 +18,8 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  late int listSize;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -74,6 +76,8 @@ class _SearchState extends State<Search> {
                       }
                     }
 
+                    listSize = roomslist.length;
+
                     return Padding(
                       padding: const EdgeInsets.all(8),
                       child: GridView.builder(
@@ -83,12 +87,7 @@ class _SearchState extends State<Search> {
                           mainAxisSpacing: 4,
                         ),
                         itemBuilder: (buildContext, index) {
-                          print('$index');
-                          if ( roomslist[index].name.toUpperCase().contains(widget.searchQuery.toUpperCase() ))
-                            //return RoomWidget(roomslist[index],"");
-                            return Container(color: Colors.black,);
-                          else
-                            return Container(color: Colors.black,);
+                            return RoomWidget(roomslist[index],"");
                         },
                         itemCount: count,
                       ),
