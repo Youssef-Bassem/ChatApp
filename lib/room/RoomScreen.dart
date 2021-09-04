@@ -64,6 +64,13 @@ class _RoomScreenState extends State<RoomScreen> {
           ),
           Scaffold(
             appBar: AppBar(
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamed(HomeScreen.ROUTE_NAME, arguments: HomeScreen());
+                },
+              ),
               title: Text(room.name),
               elevation: 0,
               centerTitle: true,
